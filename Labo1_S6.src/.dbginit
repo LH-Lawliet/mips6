@@ -1,0 +1,7 @@
+#! arm-none-eabi-gdb
+open lib/*.c libshield/*.c
+target remote localhost:3333
+load
+monitor reset halt
+tbreak main
+continue
