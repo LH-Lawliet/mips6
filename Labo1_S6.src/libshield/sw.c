@@ -28,11 +28,12 @@
 uint32_t sw_init(void)
 {
 	//          < A COMPLETER >    
-	uint32_t result_swr = io_configure(_GPIOC, PIN_0, IO_CFG_SW, NULL);
-    uint32_t result_swl = io_configure(_GPIOC, PIN_1, IO_CFG_SW, NULL);
-    uint32_t result_swu = io_configure(_GPIOA, PIN_4, IO_CFG_SW, NULL);
-    uint32_t result_swd = io_configure(_GPIOB, PIN_0, IO_CFG_SW, NULL);
-    uint32_t result_swc = io_configure(_GPIOB, PIN_5, IO_CFG_SW, NULL);
+	uint32_t result_swr = io_configure(_GPIOC, SW_LEFT_MASK, IO_CFG_SW, NULL);
+	uint32_t result_swl = io_configure(_GPIOC, SW_RIGHT_MASK, IO_CFG_SW, NULL);
+    uint32_t result_swu = io_configure(_GPIOA, SW_UP_MASK, IO_CFG_SW, NULL);
+    uint32_t result_swd = io_configure(_GPIOB, SW_DOWN_MASK, IO_CFG_SW, NULL);
+    uint32_t result_swc = io_configure(_GPIOB, SW_CENTER_MASK, IO_CFG_SW, NULL);
+
     return result_swr | result_swl | result_swu | result_swd | result_swc;
 }
 
@@ -78,12 +79,24 @@ uint32_t sw_center()
 
 uint32_t sw_input() {
     //          < A COMPLETER >
+	uint32_t returnVal = io_read(_GPIOC, SW_RIGHT_MASK)>>SW_RIGHT_OFST;
+	returnVal |= io_read(_GPIOC, SW_LEFT_MASK)>>SW_LEFT_OFST<<1;
+	returnVal |= io_read(_GPIOA, SW_UP_MASK)>>SW_UP_OFST<<2;
+	returnVal |= io_read(_GPIOB, SW_DOWN_MASK)>>SW_DOWN_OFST<<3;
+	returnVal |= io_read(_GPIOB, SW_CENTER_MASK)>>SW_CENTER_OFST<<4;
+
+
+	/*
+	uint32_t result_swr = io_configure(_GPIOC, SW_LEFT_MASK|SW_RIGHT_MASK, IO_CFG_SW, NULL);
+    uint32_t result_swu = io_configure(_GPIOA, SW_UP_MASK, IO_CFG_SW, NULL);
+    uint32_t result_swd = io_configure(_GPIOB, SW_DOWN_MASK | SW_CENTER_MASK, IO_CFG_SW, NULL);
+
 
     uint32_t returnVal = sw_right();
-    returnVal += sw_left()<<1;
-    returnVal += sw_up()<<2;
-    returnVal += sw_down()<<3;
-    returnVal += sw_center()<<4;
+    returnVal |= (sw_left()<<1);
+    returnVal |= (sw_up()<<2);
+    returnVal |= (sw_down()<<3);
+    returnVal |= (sw_center()<<4);*/
     return returnVal;
 }
 

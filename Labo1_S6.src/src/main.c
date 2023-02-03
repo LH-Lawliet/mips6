@@ -7,7 +7,7 @@
 
 
 
-#define MAIN1
+#define MAIN2
 
 #ifdef MAIN1
 
@@ -78,20 +78,38 @@ int main()
     sw_init();
     
     // Configure output LED_RED:
-//	io_configure(    A COMPLETER    );
+    //	io_configure(    A COMPLETER    );
+    io_configure(_GPIOB, PIN_4, ( PIN_MODE_ALTFUNC | PIN_OPT_AF2 | PIN_OPT_RESISTOR_NONE | PIN_OPT_OUTPUT_PUSHPULL ), NULL);
     
-//	pwm_init(    A COMPLETER    );
+    //	pwm_init(    A COMPLETER    );
+    pwm_init(_TIM3, pwm_period, NULL);
     
-//	pwm_channel_enable(    A COMPLETER    );
- 	
-//	pwm_start(    A COMPLETER    );
-	
-	while (1) {
-//        timer_wait_us(    A COMPLETER    );
-        
+    //pwm_channel_enable(    A COMPLETER    ); 
+    pwm_channel_enable(_TIM3, PWM_CHANNEL_1, dutycycle, 1); //oe seems to be output enable
 
-//          < CODE PRINCIPAL A COMPLETER >
-        
+    cls();
+    lcd_printf("dutycycle: %d", dutycycle);
+ 	
+    //	pwm_start(    A COMPLETER    );
+	pwm_start(_TIM3);
+
+	while (1) {
+        //          < CODE PRINCIPAL A COMPLETER >  
+        uint32_t left = sw_left();
+        uint32_t right = sw_right();
+        if (left && dutycycle>0) {
+            dutycycle -= 10;
+        } else if (right && dutycycle<100) {
+            dutycycle += 10;
+        }
+
+        if (right || left) {
+            pwm_channel_set(_TIM3, PWM_CHANNEL_1, dutycycle);
+            cls();
+            lcd_printf("dutycycle: %d", dutycycle);
+        }
+
+        timer_wait_us(_TIM2, sampling_period, NULL);            
 	}
 	
 	return 0;
