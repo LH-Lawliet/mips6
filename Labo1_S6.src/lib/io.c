@@ -252,25 +252,43 @@ int io_configure(GPIO_t *gpio, uint16_t pin_mask, uint32_t pin_cfg, OnIO cb)
 uint32_t io_read(GPIO_t *gpio, uint16_t mask)
 {
 	//          < A COMPLETER >
-
+	//io_configure(gpio, PIN_MODE_INPUT, mask, NULL);
+	uint32_t returnVal = (gpio->IDR);
+	returnVal = returnVal&(uint32_t)mask;
+	return returnVal;
 }
 
 void io_write(GPIO_t *gpio, uint16_t val, uint16_t mask)
 {
 	//          < A COMPLETER >
+	//io_configure(gpio, PIN_MODE_OUTPUT, mask, NULL);
+	
+	//uint32_t forcedVal = (uint32_t)(val) & (uint32_t)(mask);
+	//gpio->ODR = gpio->ODR|forcedVal;
+
+	gpio->BSRR = ((uint32_t)val&(uint32_t)mask)|((~(uint32_t)val&(uint32_t)mask)<<16);
 }
 
 void io_write_n(GPIO_t *gpio, uint16_t val, uint16_t mask)
 {
 	//          < A COMPLETER >
+	//io_configure(gpio, PIN_MODE_OUTPUT, mask, NULL);
+	//uint32_t forcedVal = (uint32_t)(val) & (uint32_t)(mask);
+	//gpio->ODR = gpio->BSRR&(~forcedVal);
+
+	gpio->BSRR = (~(uint32_t)val&(uint32_t)mask)|(((uint32_t)val&(uint32_t)mask)<<16);
 }
 
 void io_set(GPIO_t *gpio, uint16_t mask)
 {
 	//          < A COMPLETER >
+	//io_write(gpio, 0xFFFF, mask);
+	gpio->BSRR = (uint32_t) mask;
 }
 
 void io_clear(GPIO_t *gpio, uint16_t mask)
 {
 	//          < A COMPLETER >
+	//io_write_n(gpio, 0xFFFF, mask);
+	gpio->BSRR = ~(uint32_t) mask;
 }
