@@ -1,12 +1,12 @@
 #include "timer.h"
 
+#include "libshield/lcd_128x32.h"
 
 /* timer_wait_ms
  *   wait for ms millisecond function
  */
 int timer_wait_ms(TIM_t *tmr, uint32_t ms, OnTick cb)
 {
-    
 //	< A COMPLETER >
 
 }
@@ -17,9 +17,20 @@ int timer_wait_ms(TIM_t *tmr, uint32_t ms, OnTick cb)
  */
 int timer_wait_us(TIM_t *tmr, uint32_t us, OnTick cb)
 {
-    
-//	< A COMPLETER >
-
+    //	< A COMPLETER >
+    tmr->CCER = 0;
+    tmr->SMCR = 0;
+    tmr->PSC=249;
+    tmr->ARR=63999;
+    tmr->CNT=0;
+    tmr->CR1=1;
+    for (uint32_t i = 0; i<1000; ++i) {
+        cls();
+        lcd_printf("oui oui %d %d\n", tmr->CNT, tmr->SR);
+        //lcd_printf("oui : %d \n", TIM2->SR);
+    }
+    return 0;
+    //
 }
 
 

@@ -19,7 +19,13 @@ int main()
 {    
     leds_init();
     leds(0);
-    
+    lcd_reset();   
+
+    //cls();
+    //lcd_printf("start loop\n");
+
+    //timer_wait_us(_TIM2, 1000*1000, NULL);
+
     while(1)
     {
         red_led(1);
