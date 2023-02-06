@@ -8,7 +8,7 @@
 int timer_wait_ms(TIM_t *tmr, uint32_t ms, OnTick cb)
 {
 //	< A COMPLETER >
-
+    timer_wait_us(tmr, ms*1000, cb);
 }
 
 
@@ -18,6 +18,41 @@ int timer_wait_ms(TIM_t *tmr, uint32_t ms, OnTick cb)
 int timer_wait_us(TIM_t *tmr, uint32_t us, OnTick cb)
 {
     //	< A COMPLETER >
+
+    uint32_t clk = sysclks.apb1_timer_freq;
+    if (tmr == TIM2)
+    {
+        RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
+    }
+    else if (tmr == TIM3)
+    {
+        RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; 
+        
+    }
+    else if (tmr == TIM4)
+    {
+        RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; 
+        
+    }
+    else if (tmr == TIM5)
+    {
+        RCC->APB1ENR |= RCC_APB1ENR_TIM5EN; 
+    }
+
+    uint32_t mask = (TIM_CR1_CEN|TIM_CR1_UDIS|TIM_CR1_URS|TIM_CR1_OPM|TIM_CR1_DIR|TIM_CR1_CMS_1|TIM_CR1_CKD|0xFC00);
+    tmr->CR1 = (tmr->CR1 & mask) | TIM_CR1_OPM | TIM_CR1_ARPE;
+    tmr->PSC = clk/1000000 - 1; 
+    tmr->ARR = us-1;
+    tmr->EGR = 1;
+    tmr->CR1 |= 1;
+    lcd_printf("start loop\n");
+    while (tmr->CR1 & 1)
+    {
+        lcd_printf("loop\n");
+    }
+    return 0;
+
+    /*
     tmr->CCER = 0;
     tmr->SMCR = 0;
     tmr->PSC=249;
@@ -31,6 +66,7 @@ int timer_wait_us(TIM_t *tmr, uint32_t us, OnTick cb)
     }
     return 0;
     //
+    */
 }
 
 

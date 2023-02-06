@@ -6,9 +6,7 @@
 #include "libshield/sw.h"
 
 
-
 #define MAIN1
-
 
 
 #ifdef MAIN1
