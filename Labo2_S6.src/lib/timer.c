@@ -57,16 +57,6 @@ int timer_count_init(TIM_t *tmr, uint32_t timebase_us)
 {
     
 //	< A COMPLETER >
-
-}
-
-
-/* timer_start
- *   reset & enable counting
- */
-void timer_start(TIM_t *tmr)
-{
-//	< A COMPLETER >
     uint32_t clk = sysclks.apb1_timer_freq;
     if (tmr == TIM2)
     {
@@ -94,6 +84,16 @@ void timer_start(TIM_t *tmr)
     tmr->CR1 = (TIM_CR1_CEN|TIM_CR1_DIR|TIM_CR1_CMS_1|TIM_CR1_CKD|0xFC00);
     tmr->PSC = clk/10000 - 1; 
     tmr->EGR = 1;
+}
+
+
+/* timer_start
+ *   reset & enable counting
+ */
+void timer_start(TIM_t *tmr)
+{
+//	< A COMPLETER >
+    tmr->CNT = 0;
     tmr->CR1 |= 1;
 }
 
