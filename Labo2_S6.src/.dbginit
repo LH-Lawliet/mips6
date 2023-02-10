@@ -3,5 +3,5 @@ open lib/*.c
 target remote localhost:3333
 load
 monitor reset halt
-tbreak main
+#tbreak main
 continue

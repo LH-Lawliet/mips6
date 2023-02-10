@@ -6,7 +6,7 @@
 #include "libshield/sw.h"
 
 
-#define MAIN1
+#define MAIN2
 
 
 #ifdef MAIN1
@@ -49,7 +49,8 @@ int main()
     sw_init();
     timer_count_init(_TIM2, timebase_us);
     lcd_reset();    
-    
+    cls();
+
     while(1)
     {
         //TIM3 used for sampling button states
