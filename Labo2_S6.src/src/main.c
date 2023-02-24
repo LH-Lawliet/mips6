@@ -6,7 +6,7 @@
 #include "libshield/sw.h"
 
 
-#define MAIN3
+#define MAIN1
 
 
 #ifdef MAIN1
@@ -29,7 +29,7 @@ int main()
         red_led(1);
         timer_wait_us(_TIM2, wait_us, NULL);
         red_led(0);
-        timer_wait_us(_TIM2, wait_us, NULL);
+        timer_wait_ms(_TIM2, wait_us/1000, NULL);
     }        
 }            
             
