@@ -113,9 +113,10 @@ int timer_count_init(TIM_t *tmr, uint32_t timebase_us)
         tmr->ARR = 1<<33-2;
     }
 
-    tmr->CR1 = (TIM_CR1_CEN|TIM_CR1_DIR|TIM_CR1_CMS_1|TIM_CR1_CKD|TIM_CR1_ARPE|0xFC00);
+    tmr->CR1 = (TIM_CR1_CEN|TIM_CR1_DIR|TIM_CR1_CMS_1|TIM_CR1_CKD|TIM_CR1_ARPE);
     tmr->PSC = clk/(timebase_us*100) - 1; 
     tmr->EGR = 1;
+    tmr->SR &= ~(0x1F);
 
     return 0;
 }

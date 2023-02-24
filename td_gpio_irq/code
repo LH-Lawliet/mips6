@@ -1,0 +1,50 @@
+1.a
+	la led bleue:
+		-arduino D8
+		-broche PA9
+	bouton central:
+		-arduino D4
+		-broche PB5
+
+1.b
+	MODER permet de régler si la broche est une sortie, une entrée, une entrée analogique...
+	OTYPER permet de gérer si la broche est en push pull ou en open drain
+	OSPEEDR permet de gérer la vitesse de réaction de la broche
+	PUPDR permet de gérer le réseau de résistance
+
+1.c
+
+	//switch
+	_GPIOB->MODER &= ~(3<<10);
+	_GPIOB->PUPDR &= ~(3<<10);
+
+1.d
+	//led
+	_GPIOA->MODER &= ~(1<<19);
+	_GPIOA->MODER |= (1<<18);
+	_GPIOA->OTYPER &= ~(1<<9);
+	_GPIOA->OSPEERD &= ~(1<<18);
+	_GPIOA->OSPEERD |= (1<<18);
+	_GPIOA->PUPDR &= (3<<18);
+
+
+2.a
+	IMR pour réveiller le processeur sur une interuption
+	EMR pour réveiller le processeur sur un evenement
+	RTSR pour appeler des évenements sur le front montant
+	FTSR pour appeler des évenements sur le front descendant
+
+2.b
+	EXTICR permet de choisir quel "pin" execute l'interuption
+
+2.c 
+	SYSCFG_EXTICR2 &= ~(SYSCFG_EXTICR2_EXTI5_PB);
+	SYSCFG_EXTICR2 |= SYSCFG_EXTICR2_EXTI5_PB;
+
+2.d
+	Le registre PR est mis à 1 quand l'interuption doit être executé
+
+
+
+3.a
+	

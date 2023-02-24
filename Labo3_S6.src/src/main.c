@@ -11,7 +11,7 @@
 
 #ifdef MAIN1
 
-#define IO_CFG_LED_RED      //  < A COMPLETER >
+#define IO_CFG_LED_RED      PIN_MODE_OUTPUT | PIN_OPT_RESISTOR_NONE | PIN_OPT_OUTPUT_PUSHPULL | PIN_OPT_OUTPUT_SPEED_MEDIUM
 
 #define BLINK_SPEED_BASE    1000
 
@@ -25,7 +25,7 @@ void tmr_cb()
 int main()
 {
     // Configure output LED_RED   --> PB4
-	io_configure(  < A COMPLETER >,  < A COMPLETER >, IO_CFG_LED_RED, NULL);
+	io_configure(_GPIOB,  PIN_4, IO_CFG_LED_RED, NULL);
     red_led(0);
 
 	timer_tick_init(_TIM2, BLINK_SPEED_BASE, tmr_cb);
