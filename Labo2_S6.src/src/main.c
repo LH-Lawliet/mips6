@@ -19,7 +19,7 @@ int main()
     leds(0);
     lcd_reset();   
 
-    //cls();
+    cls();
     //lcd_printf("start loop\n");
 
     //timer_wait_us(_TIM2, 1000*1000, NULL);
