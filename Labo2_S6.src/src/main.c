@@ -6,7 +6,7 @@
 #include "libshield/sw.h"
 
 
-#define MAIN2
+#define MAIN3
 
 
 #ifdef MAIN1
@@ -82,6 +82,8 @@ int main()
     uint32_t delay = 0;
     uint8_t color = 0;
     uint8_t leds_state = 1;
+
+    uint8_t c = 0;
     
     leds_init();
     leds(0);
@@ -89,13 +91,52 @@ int main()
     lcd_reset();
     
     //initialisation timer
-    
+    timer_count_init(_TIM2, timebase_us);
+    timer_count_init(_TIM4, long_delay*1000);
+    timer_start(_TIM4);
     
     while(1)
     {
+        //TIM3 used for sampling button states
         timer_wait_us(_TIM3, sampling_period, NULL);
-        
-//      < CODE PRINCIPAL A COMPLETER >
+
+        if(sw_center())
+        {
+            //TIM2 used for delay measurement
+            timer_start(_TIM2);
+            while(sw_input() & SW_CENTER);
+            timer_stop(_TIM2);
+            delay = read_timer(_TIM2)*timebase_us/1000;
+            cls();
+            lcd_printf("duree appui : %d ms\r\n", delay);
+
+            if (delay<long_delay) {
+                leds_state=0;
+            } else {
+                leds_state = 1;
+            }
+        }
+
+        if (leds_state==0) {
+            uint32_t tim = read_timer(_TIM4)/1000;
+            if (tim%8!=color) {
+                cls();
+                lcd_printf("duree appui : %d ms\r\n", delay);
+                lcd_printf("couleur : %d\r\n", tim%8);
+                color = tim%8;
+                leds(color);
+            }
+        } else {
+            uint32_t tim = read_timer(_TIM4)/1000;
+            if ((tim%2?LED_RED:0)!=color) {
+                cls();
+                lcd_printf("duree appui : %d ms\r\n", delay);
+                lcd_printf("couleur : %d\r\n", tim%2?LED_RED:0);
+                color = tim%2?LED_RED:0;
+                leds(color);
+            }
+        }
+
     }        
 }
 #endif /* MAIN3 */

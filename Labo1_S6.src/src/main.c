@@ -161,9 +161,9 @@ int main()
     pwm_start(_TIM3);
 
     void changeDutyCycle(uint32_t delta) {
-        dutycycle += delta;
+        dutycycle += delta; 
 
-        if (dutycycle<0) {
+        if (dutycycle>110) { //this is an unsigned int, so 0-10 isn't -10 but +smth
             dutycycle = 0;
         } else if (dutycycle>100) {
             dutycycle = 100;
