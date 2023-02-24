@@ -161,13 +161,15 @@ int main()
     pwm_start(_TIM3);
 
     void changeDutyCycle(uint32_t delta) {
-        dutycycle += delta; 
+        int ndutyCycle = dutycycle+delta;
 
-        if (dutycycle>110) { //this is an unsigned int, so 0-10 isn't -10 but +smth
-            dutycycle = 0;
-        } else if (dutycycle>100) {
-            dutycycle = 100;
+        if (ndutyCycle<0) { //this is an unsigned int, so 0-10 isn't -10 but +smth
+            ndutyCycle = 0;
+        } else if (ndutyCycle>100) {
+            ndutyCycle = 100;
         }
+
+        dutycycle = (uint32_t) ndutyCycle;
 
         pwm_channel_set(_TIM3, PWM_CHANNEL_1, dutycycle);
         pwm_channel_set(_TIM3, PWM_CHANNEL_2, 100-dutycycle);
