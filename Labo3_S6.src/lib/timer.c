@@ -90,8 +90,8 @@ int timer_tick_init(TIM_t *tmr, uint32_t tick_ms, OnTick cb)
 
 	// set mode
 	//  < A COMPLETER >
-	uint32_t mask = (TIM_CR1_CEN|TIM_CR1_UDIS|TIM_CR1_URS|TIM_CR1_OPM|TIM_CR1_DIR|TIM_CR1_CMS_1|TIM_CR1_CKD|0xFC00);
-	tmr->CR1 = ;
+	tmr->CR1 = TIM_CR1_ARPE;
+	tmr->DIER |= TIM_DIER_UIE;
 	
 	// set prescaler 100us
 	//  < A COMPLETER >
@@ -99,11 +99,12 @@ int timer_tick_init(TIM_t *tmr, uint32_t tick_ms, OnTick cb)
 	
 	// set period
 	//  < A COMPLETER >
-	tmr->ARR = ms/10-1;
+	tmr->ARR = tick_ms*10-1;
 	
 	if (cb) {
 		//  < A COMPLETER >
-		NVIC_SetPriority(irqn, 6); //6 is exti1
+		irq_priority = 6; //6 is exti1
+		NVIC_SetPriority(irqn, irq_priority);
 		NVIC_EnableIRQ(irqn);
 	}
 	
@@ -117,9 +118,11 @@ int timer_tick_period(TIM_t *tmr, uint32_t tick_ms)
 {
     // set period
 	//  < A COMPLETER >
+	tmr->ARR = tick_ms*10-1;
     
     // force update to reset counter and prescaler
 	//  < A COMPLETER >
+	tmr->EGR = 1;
 }
 
 /* timer_start
@@ -129,9 +132,11 @@ void timer_start(TIM_t *tmr)
 {
 	// force update to reset counter and prescaler
 	//  < A COMPLETER >
+	tmr->EGR = 1;
 	
 	// enable counting
 	//  < A COMPLETER >
+    tmr->CR1 |= 1;
 }
 
 /* timer_stop
@@ -141,5 +146,6 @@ void timer_stop(TIM_t *tmr)
 {
 	// disable counting
 	//  < A COMPLETER >
+	tmr->CR1 &= ~1;
 }
 
