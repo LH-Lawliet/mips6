@@ -47,4 +47,12 @@
 
 
 3.a
+	Le nom est exti, la priorité dépend de l'exti choisi, ici irqn = 6 pour exti0
+
+3.b 
+	Les registres du NVIC qui permette d'autoriser les demandes d'interuptions sur un canal sont les registres SYSCFG_EXTICR1/SYSCFG_EXTICR2/SYSCFG_EXTICR3/SYSCFG_EXTICR4
+	La priorité se code sur le registre IP
+
+
+
 	

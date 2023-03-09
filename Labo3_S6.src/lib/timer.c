@@ -103,7 +103,7 @@ int timer_tick_init(TIM_t *tmr, uint32_t tick_ms, OnTick cb)
 	
 	if (cb) {
 		//  < A COMPLETER >
-		irq_priority = 6; //6 is exti1
+		irq_priority = 6;
 		NVIC_SetPriority(irqn, irq_priority);
 		NVIC_EnableIRQ(irqn);
 	}

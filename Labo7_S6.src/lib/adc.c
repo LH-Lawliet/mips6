@@ -136,8 +136,6 @@ int adc_init(ADC_t *adc, uint32_t mode, OnSample cb)
 		if (sysclks.apb2_freq / (2*(presc_cfg+1)) < ADCCLK_MAX) {
 			ADC->CCR = presc_cfg<<16;
 			
-			
-			
 			/* A COMPLETER */
 			
 			
