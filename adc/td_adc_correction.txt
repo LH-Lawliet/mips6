@@ -1,0 +1,115 @@
+1.a  ADC main features
+
+     - 12-bit, 10-bit, 8-bit or 6-bit configurable resolution
+     - Interrupt generation at the end of conversion (regular),
+       end of injected conversion, overrun events
+
+     - Single and continuous or triggered conversion modes
+     - Scan mode for automatic conversion of channel 0 to channel n
+     - Channel-wise programmable sampling time
+    
+1.b  Registers
+
+     - SR[1] regular channel End Of Conversion (EOC)
+       SR[5] Overrun : écrasement de la dernière valeur convertie
+       
+     - CR1/CR2 : config du mode de conversion
+     - SMPR1/SMPR2 : ADC SaMPle time Register
+         pour le mode continu : adc n bits
+         période d'échantillonnage = (SMPR + n)*ADC_CLK
+         réglable par canal d'entrée
+     - SQR1/2/3 : regular SeQuence Registers
+         pour le mode scan,
+         * liste des canaux à convertir,
+           * 16 max en mode single/continuous
+           * 8 max en mode triggered
+         * nombre des canaux à convertir
+     - DR : Data Register
+     - CCR : Common Control Register
+       réglage du diviseur de l'horloge/2/4/6/8
+       mesure de température/tension d'alimentation
+   
+2. Initialisation
+
+2.a  _RCC->APB2ENR |= 1<<8;
+     datasheet STM32 p40, pinouts and pin configuration, table 8
+     
+2.b  ADC_CLK = sysclks.apb2_freq/4 = 21 MHz
+     CCR[17:16] = 01
+
+int adc_init(ADC_t *adc, uint32_t mode, OnSample cb)
+{
+	IRQn_t	irq_number;
+	uint32_t irq_priority;
+	
+	if (adc == _ADC1) {
+#ifdef USE_ADC1
+		// enable ADC clocking
+		_RCC->APB2ENR |= 1<<8;
+		
+		// configure pins
+		io_configure(ADC1_GPIO_PORT, ADC1_GPIO_PINS, PIN_MODE_ANALOG, NULL);
+		
+		irq_number = ADC_IRQn;
+		irq_priority = ADC1_IRQ_PRIORITY;
+#else
+		return -1;
+#endif
+	} else {
+		return -1;
+	}
+	
+	for (int presc_cfg=0; presc_cfg<=3; presc_cfg++) {
+		// set up ADCCLK prescaler config (2,4,6 or 8) so that Fadcclk < 30MHz
+		if (sysclks.apb2_freq / (2*(presc_cfg+1)) < ADCCLK_MAX) {
+			ADC->CCR = presc_cfg<<16;
+			
+			// Scan mode (1<<8) : convert inputs selected in ADC_SQRx
+			adc->CR1 = 1<<8 | (mode & (3<<24));
+			
+			// EOCS (1<<10) : bit set (and interrupt requested) after each
+			//                channel conversion
+			// ADON (1<<0)  : ADC on
+			adc->CR2 = 1<<10 | 1;
+			
+			// return ADCCLK
+			adc_freq = sysclks.apb2_freq / (2*(presc_cfg+1));
+			return (int)adc_freq;
+		}
+	}
+	
+	return -1;
+}
+
+
+3. Conversion d'un canal par polling
+
+/* adc_channel_sample
+ *   sample the specified channel and generate an interrupt if 
+ *   a callback was defined on init, else does the conversion in
+ *   polling mode.
+ */
+uint16_t adc_channel_sample(ADC_t *adc, uint32_t channel)
+{
+	if (channel>18) return 0;
+	
+	n_to_convert = 1;
+	
+	/* special internal channels */
+	if (channel == ADC_CHANNEL_TEMP) {
+		ADC->CCR = (ADC->CCR & ~(3<<22)) | (2<<22);
+	} else if (channel == ADC_CHANNEL_VREFINT) {
+		ADC->CCR = (ADC->CCR & ~(3<<22)) | (2<<22);
+	} else if (channel == ADC_CHANNEL_VBAT) {
+		ADC->CCR = (ADC->CCR & ~(3<<22)) | (1<<22);
+	}
+	
+	adc->SQR[0] = (n_to_convert-1) << 20;
+	adc->SQR[1] = 0;
+	adc->SQR[2] = channel;
+	
+	adc->CR2 |= 1<<30;
+    while (!(adc->SR & ADC_SR_EOC));
+
+    return (uint32_t)(adc->DR);
+}

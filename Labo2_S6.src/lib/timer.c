@@ -36,9 +36,6 @@ int timer_wait_ms(TIM_t *tmr, uint32_t ms, OnTick cb)
     {
     }
     return 0;
-
-
-    timer_wait_us(tmr, ms*1000, cb);
 }
 
 

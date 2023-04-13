@@ -23,9 +23,9 @@
 	_GPIOA->MODER &= ~(1<<19);
 	_GPIOA->MODER |= (1<<18);
 	_GPIOA->OTYPER &= ~(1<<9);
-	_GPIOA->OSPEERD &= ~(1<<18);
-	_GPIOA->OSPEERD |= (1<<18);
-	_GPIOA->PUPDR &= (3<<18);
+	_GPIOA->OSPEEDR &= ~(1<<19);
+	_GPIOA->OSPEEDR |= (1<<18);
+	_GPIOA->PUPDR &= ~(3<<18);
 
 
 2.a
@@ -38,20 +38,38 @@
 	EXTICR permet de choisir quel "pin" execute l'interuption
 
 2.c 
-	SYSCFG_EXTICR2 &= ~(SYSCFG_EXTICR2_EXTI5_PB);
-	SYSCFG_EXTICR2 |= SYSCFG_EXTICR2_EXTI5_PB;
+	_SYSCFG->EXTICR[1] &= ~(SYSCFG_EXTICR2_EXTI5_PB);
+	_SYSCFG->EXTICR[1] |= SYSCFG_EXTICR2_EXTI5_PB;
 
 2.d
-	Le registre PR est mis à 1 quand l'interuption doit être executé
+	Le registre PR permet d'acquitter l'interuption
 
 
 
 3.a
-	Le nom est exti, la priorité dépend de l'exti choisi, ici irqn = 6 pour exti0
+	Le nom est EXTI et l'irq number correspond à ça position (exemple : EXTI5  ->  irqn=23)
 
 3.b 
 	Les registres du NVIC qui permette d'autoriser les demandes d'interuptions sur un canal sont les registres SYSCFG_EXTICR1/SYSCFG_EXTICR2/SYSCFG_EXTICR3/SYSCFG_EXTICR4
 	La priorité se code sur le registre IP
+
+3.c
+	_NVIC->IP[23] = 6<<4;
+	_NVIC->ISER[0] |= 1<<23;
+
+
+4.a
+	main :
+		-configuration des entrées sorties
+		-configuration du bloc d'interruption
+		-boucle infini "d'attente"
+	isr :
+		-acquitter l'interruption
+	
+4.b
+	-changer l'état de la LED
+	-memoriser son nouvel état
+	-lever l'interuption
 
 
 

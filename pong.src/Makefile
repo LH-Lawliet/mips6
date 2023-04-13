@@ -39,6 +39,7 @@ UADEFS =
 SRC  = startup/stm32f411_periph.c startup/sys_handlers.c startup/rcc.c \
        startup/system_stm32f4xx.c \
        lib/timer.c \
+       lib/adc.c \
        src/${PROJ}.c 
 
 # List ASM source files here

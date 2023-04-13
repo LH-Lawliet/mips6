@@ -76,7 +76,7 @@ Discarded input sections
  .data          0x0000000000000000        0x0 startup/sys_handlers.o
  .bss           0x0000000000000000        0x0 startup/sys_handlers.o
  .bss           0x0000000000000000        0x0 startup/rcc.o
- .bss           0x0000000000000000        0x4 src/main.o
+ .data          0x0000000000000000        0x0 src/main.o
  .text          0x0000000000000000        0x0 startup/startup_stm32f411xe.o
  .data          0x0000000000000000        0x0 startup/startup_stm32f411xe.o
  .bss           0x0000000000000000        0x0 startup/startup_stm32f411xe.o
@@ -828,61 +828,62 @@ LOAD /usr/lib/gcc/arm-none-eabi/12.2.0/thumb/v7e-m+fp/hard/crtn.o
                 0x0000000008000c30                PROVIDE (__fini_array_end = .)
                 0x0000000008000c30                _sidata = LOADADDR (.data)
 
-.data           0x0000000020000000       0xb4 load address 0x0000000008000c30
+.data           0x0000000020000000       0xb0 load address 0x0000000008000c30
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
  .data          0x0000000020000000       0xa8 startup/rcc.o
  .data          0x00000000200000a8        0x4 startup/system_stm32f4xx.o
                 0x00000000200000a8                SystemCoreClock
- .data          0x00000000200000ac        0x4 src/main.o
-                0x00000000200000ac                on
  *(.data*)
  .data.__atexit_recursive_mutex
-                0x00000000200000b0        0x4 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-__call_atexit.o)
-                0x00000000200000b0                __atexit_recursive_mutex
-                0x00000000200000b4                . = ALIGN (0x4)
-                0x00000000200000b4                _edata = .
+                0x00000000200000ac        0x4 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-__call_atexit.o)
+                0x00000000200000ac                __atexit_recursive_mutex
+                0x00000000200000b0                . = ALIGN (0x4)
+                0x00000000200000b0                _edata = .
 
-.igot.plt       0x00000000200000b4        0x0 load address 0x0000000008000ce4
- .igot.plt      0x00000000200000b4        0x0 /usr/lib/gcc/arm-none-eabi/12.2.0/thumb/v7e-m+fp/hard/crtbegin.o
-                0x00000000200000b4                . = ALIGN (0x4)
+.igot.plt       0x00000000200000b0        0x0 load address 0x0000000008000ce0
+ .igot.plt      0x00000000200000b0        0x0 /usr/lib/gcc/arm-none-eabi/12.2.0/thumb/v7e-m+fp/hard/crtbegin.o
+                0x00000000200000b0                . = ALIGN (0x4)
 
-.bss            0x00000000200000b4      0x1c8 load address 0x0000000008000ce4
-                0x00000000200000b4                _sbss = .
-                0x00000000200000b4                __bss_start__ = _sbss
+.bss            0x00000000200000b0      0x1d0 load address 0x0000000008000ce0
+                0x00000000200000b0                _sbss = .
+                0x00000000200000b0                __bss_start__ = _sbss
  *(.bss)
- .bss           0x00000000200000b4       0x14 startup/system_stm32f4xx.o
-                0x00000000200000b4                sysclks
+ .bss           0x00000000200000b0       0x14 startup/system_stm32f4xx.o
+                0x00000000200000b0                sysclks
+ .bss           0x00000000200000c4        0x8 src/main.o
+                0x00000000200000c4                on
+                0x00000000200000c8                cpt
  *(.bss*)
  .bss.completed.1
-                0x00000000200000c8        0x1 /usr/lib/gcc/arm-none-eabi/12.2.0/thumb/v7e-m+fp/hard/crtbegin.o
- *fill*         0x00000000200000c9        0x3 
- .bss.object.0  0x00000000200000cc       0x18 /usr/lib/gcc/arm-none-eabi/12.2.0/thumb/v7e-m+fp/hard/crtbegin.o
+                0x00000000200000cc        0x1 /usr/lib/gcc/arm-none-eabi/12.2.0/thumb/v7e-m+fp/hard/crtbegin.o
+ *fill*         0x00000000200000cd        0x3 
+ .bss.object.0  0x00000000200000d0       0x18 /usr/lib/gcc/arm-none-eabi/12.2.0/thumb/v7e-m+fp/hard/crtbegin.o
  .bss.__lock___atexit_recursive_mutex
-                0x00000000200000e4        0x1 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-lock.o)
-                0x00000000200000e4                __lock___atexit_recursive_mutex
- *fill*         0x00000000200000e5        0x3 
+                0x00000000200000e8        0x1 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-lock.o)
+                0x00000000200000e8                __lock___atexit_recursive_mutex
+ *fill*         0x00000000200000e9        0x3 
  .bss.__atexit0
-                0x00000000200000e8      0x190 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-__atexit.o)
-                0x00000000200000e8                __atexit0
- .bss.__atexit  0x0000000020000278        0x4 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-__call_atexit.o)
-                0x0000000020000278                __atexit
+                0x00000000200000ec      0x190 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-__atexit.o)
+                0x00000000200000ec                __atexit0
+ .bss.__atexit  0x000000002000027c        0x4 /usr/lib/gcc/arm-none-eabi/12.2.0/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc.a(libc_a-__call_atexit.o)
+                0x000000002000027c                __atexit
  *(COMMON)
-                0x000000002000027c                . = ALIGN (0x4)
-                0x000000002000027c                _ebss = .
-                0x000000002000027c                __bss_end__ = _ebss
+                0x0000000020000280                . = ALIGN (0x4)
+                0x0000000020000280                _ebss = .
+                0x0000000020000280                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x000000002000027c      0x600 load address 0x0000000008000ce4
-                0x000000002000027c                . = ALIGN (0x4)
+                0x0000000020000280      0x600 load address 0x0000000008000ce0
+                0x0000000020000280                . = ALIGN (0x4)
                 [!provide]                        PROVIDE (end = .)
                 [!provide]                        PROVIDE (_end = .)
-                0x000000002000047c                . = (. + _Min_Heap_Size)
- *fill*         0x000000002000027c      0x200 
-                0x000000002000087c                . = (. + _Min_Stack_Size)
- *fill*         0x000000002000047c      0x400 
-                0x000000002000087c                . = ALIGN (0x4)
+                0x0000000020000480                . = (. + _Min_Heap_Size)
+ *fill*         0x0000000020000280      0x200 
+                0x0000000020000880                . = (. + _Min_Stack_Size)
+ *fill*         0x0000000020000480      0x400 
+                0x0000000020000880                . = ALIGN (0x4)
 
 /DISCARD/
  libc.a(*)

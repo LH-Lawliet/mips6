@@ -21,7 +21,8 @@ src/main.o: src/main.c include/board.h \
  /usr/arm-none-eabi/include/sys/_stdint.h include/cmsis/core_cmInstr.h \
  include/cmsis/cmsis_gcc.h include/cmsis/core_cmFunc.h \
  include/cmsis/core_cmSimd.h startup/rcc.h include/config.h lib/io.h \
- lib/timer.h libshield/lcd_128x32.h libshield/leds.h libshield/sw.h
+ lib/adc.h lib/timer.h libshield/lcd_128x32.h libshield/leds.h \
+ libshield/sw.h
 include/board.h:
 /usr/arm-none-eabi/include/stdlib.h:
 /usr/arm-none-eabi/include/machine/ieeefp.h:
@@ -52,6 +53,7 @@ include/cmsis/core_cmSimd.h:
 startup/rcc.h:
 include/config.h:
 lib/io.h:
+lib/adc.h:
 lib/timer.h:
 libshield/lcd_128x32.h:
 libshield/leds.h:

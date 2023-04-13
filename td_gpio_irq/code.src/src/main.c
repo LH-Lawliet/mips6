@@ -20,7 +20,7 @@ void blue_led(uint32_t on) {
 	}
 }
 
-volatile int on=1;
+volatile int on=0;
 int cpt=0;
 
 // External Interrupt Service Routine
