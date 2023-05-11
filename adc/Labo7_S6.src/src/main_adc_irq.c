@@ -8,7 +8,7 @@
 #include "libshield/leds.h"
 #include "libshield/lcd_128x32.h"
 
-#define MAIN2
+#define MAIN3
 
 /******************************************************************************
  * util functions

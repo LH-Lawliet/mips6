@@ -1,6 +1,8 @@
 #include "adc.h"
 #include "io.h"
 
+#include "libshield/lcd_128x32.h"
+
 /* ADC
  * 
  * 1. Initialize the ADC for regular channels only
@@ -217,7 +219,7 @@ int adc_channel_enable(ADC_t *adc, uint32_t channel, uint32_t in_sample_time)
 	// modes the same way.
 	if (channel>18 || n_to_convert==8) return -1;
 	
-	if (channel == ADC_CHANNEL_TEMP) {
+	if (channel == ADC_CHANNEL_TEMP)  {
 		ADC->CCR = (ADC->CCR & ~(3<<22)) | (2<<22);
 	} else if (channel == ADC_CHANNEL_VREFINT) {
 		ADC->CCR = (ADC->CCR & ~(3<<22)) | (2<<22);
@@ -226,33 +228,41 @@ int adc_channel_enable(ADC_t *adc, uint32_t channel, uint32_t in_sample_time)
 	}
 	
 	n_to_convert++;
-	
-	// add channel to the current sampling regular sequence
 
-	
+	// add channel to the current sampling regular sequence	
 	/* A COMPLETER */
-
-			
+    //adc_channel_sample(adc, channel); not working
+    int32_t sqri = (int32_t)((n_to_convert-1)/6);
+    int32_t soffset = ((n_to_convert-1)-(sqri*6))*5;
+    adc->SQR[2-sqri] = adc->SQR[2-sqri]&(~(((1<<7)-1)<<soffset))|(channel<<soffset); 
+		
 	// set the number of channels to scan in the regular group of 
 	// conversion sequence: write (n_to_convert-1)
-
-
 	/* A COMPLETER */
+    adc->SQR[0] = (n_to_convert-1)<<20;
 
-	
 	// copy the n_to_convert-1 in CR1[15:13] to handle triggered mode
-
-
 	/* A COMPLETER */
-
-		
+    adc->CR1 = (adc->CR1 & (~(7<<13))) | ((n_to_convert-1)<<13);
 	// set input sample time before conversion starts
-
-
 	/* A COMPLETER */
+    
+    /*int32_t mode = (adc->CR1 >> 24)&3;
+    int32_t b = 12;
+    if (mode==1) { b = 10;}
+    else if (mode==2) { b = 8;}
+    else if (mode==3) { b = 6;};
+    
+    (b+in_sample_time)/sysclks.apb2_freq;
+    */
 
-	
-	return 0;
+    int32_t smpi = 0;
+    if (channel>9) {
+        smpi = 1;
+    };
+    int32_t offset = (channel-smpi*10)*3;
+    adc->SMPR[1-smpi] = (adc->SMPR[1-smpi] & (~(7<<offset))) | (in_sample_time<<offset);
+    return 0;
 }
 
 int adc_set_trigger_evt(ADC_t *adc, uint32_t evt)
