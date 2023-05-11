@@ -22,7 +22,10 @@ int main()
 	
 	uart_puts(_USART2,"\r\nC'est un message du STM32F411 :-)\r\n");
 
-	uart_puts(_USART2, "Entrez du texte ici : ");
+	uart_pu
+	uart_printf(_USART2, "\x1B[%u;%uHle pointeur _USART2 = 0x%x\n", 20,5,_USART2);
+s(_USART2, "Entrez du texte ici : ");
+	uart_printf(_USART2, "\x1B[%u;%uHle pointeur _USART2 = 0x%x\n", 20,5,_USART2);
 
 	while (1) {
 		uart_putc(_USART2, uart_getc(_USART2));
@@ -117,9 +120,8 @@ int main()
 
 
 	uart_printf(_USART2, "la somme de %d et %d est %d\n", a, b, a+b);
-	uart_printf(_USART2, "\r%c %x\n", 'f', 15);
 	uart_printf(_USART2, "\x1B[%u;%uHle pointeur _USART2 = 0x%x\n", 20,5,_USART2);
-
+    
 	while(1) {
 	}
 

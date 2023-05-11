@@ -237,8 +237,8 @@ void uart_printf(USART_t * u, const char* fmt, ...)
 					break;
 				case 'x':
 					// A COMPLETER
-					ch = va_arg(ap, int);
-					num2str(s,ch,16);
+					ul = va_arg(ap, unsigned int);
+					num2str(s,ul,16);
 					uart_puts(u, s);
 					break;
 				default:

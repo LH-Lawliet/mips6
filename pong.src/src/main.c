@@ -16,14 +16,14 @@
 float ball_x = 128/2;
 float ball_y = 32/2;
 uint8_t ball_r = 2;
-float ball_xVel = 45; //pixel/s
+float ball_xVel = 35; //pixel/s
 float ball_yVel = 15; //pixel/S
-float ball_ratio = 0.02;
-uint8_t bounce = 0;
+float ball_ratio = 0.2;
+float bounce = 0;
 
 uint8_t game_yPlayer1 = 5;
 uint8_t game_yPlayer2 = 5;
-uint8_t game_border = 30;
+uint8_t game_border = 15;
 uint8_t game_barHeight = 32/4;
 
 uint8_t game_scorePlayer1 = 0;
@@ -31,11 +31,12 @@ uint8_t game_scorePlayer2 = 0;
 
 
 uint8_t isCatched() {
-    if (ball_y>game_yPlayer1 && ball_y<(game_yPlayer1+game_barHeight)) {
-        ball_yVel = 15*((ball_y-(game_yPlayer1+game_barHeight/2))/game_barHeight)*4;
+    uint8_t catchingMargin = 1;
+    if ((ball_y+catchingMargin)>game_yPlayer1 && ball_y<(game_yPlayer1+game_barHeight+catchingMargin)) {
+        ball_yVel = 15* (ball_y-(game_yPlayer1))/game_barHeight;
         return 1;
-    } else if (ball_y>game_yPlayer2 && ball_y<(game_yPlayer2+game_barHeight)) {
-        ball_yVel = 15*((ball_y-(game_yPlayer2+game_barHeight/2))/game_barHeight)*4;
+    } else if ((ball_y+catchingMargin)>game_yPlayer2 && ball_y<(game_yPlayer2+game_barHeight+catchingMargin)) {
+        ball_yVel = 15* (ball_y-(game_yPlayer2))/game_barHeight;
         return 2;
     }
     return 0;
@@ -44,6 +45,7 @@ uint8_t isCatched() {
 void resetBall() {
     ball_x = 128/2;
     ball_y = 32/2;
+    ball_yVel = 15;
     bounce = 0;
     timer_wait_us(_TIM2, 1000000, NULL); //one sec
 }
@@ -58,8 +60,9 @@ void drawMiddleLine() {
 }
 
 void moveBall(uint32_t step) { //step is in us
-    ball_x += ball_xVel*(1+ball_ratio*bounce)/1000000*step;
-    ball_y += ball_yVel*(1+ball_ratio*bounce)/1000000*step;
+
+    ball_x += (ball_xVel*(1+(ball_ratio*bounce)))/1000000*step;
+    ball_y += (ball_yVel*(1+(ball_ratio*bounce)))/1000000*step;
 
     if (ball_y>(32-ball_r) || ball_y<(0+ball_r)) {
         ball_yVel = -ball_yVel;
@@ -72,7 +75,7 @@ void moveBall(uint32_t step) { //step is in us
     if (limitLeft || limitRight) {
         ball_xVel = -ball_xVel;
         ball_ratio = ball_ratio*ball_ratio;
-        bounce++;
+
         if (isCatched()==0) {
             leds(4);
             if (limitLeft) {
@@ -83,6 +86,7 @@ void moveBall(uint32_t step) { //step is in us
             resetBall();
         } else {
             leds(2);
+            bounce+=1;
         }
     }
 }
