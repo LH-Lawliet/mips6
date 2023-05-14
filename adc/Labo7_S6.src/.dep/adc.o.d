@@ -20,8 +20,7 @@ lib/adc.o: lib/adc.c lib/adc.h include/board.h \
  /usr/arm-none-eabi/include/sys/_intsup.h \
  /usr/arm-none-eabi/include/sys/_stdint.h include/cmsis/core_cmInstr.h \
  include/cmsis/cmsis_gcc.h include/cmsis/core_cmFunc.h \
- include/cmsis/core_cmSimd.h startup/rcc.h include/config.h lib/io.h \
- libshield/lcd_128x32.h
+ include/cmsis/core_cmSimd.h startup/rcc.h include/config.h lib/io.h
 lib/adc.h:
 include/board.h:
 /usr/arm-none-eabi/include/stdlib.h:
@@ -53,4 +52,3 @@ include/cmsis/core_cmSimd.h:
 startup/rcc.h:
 include/config.h:
 lib/io.h:
-libshield/lcd_128x32.h:

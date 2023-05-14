@@ -1,8 +1,5 @@
 #include "adc.h"
 #include "io.h"
-
-#include "libshield/lcd_128x32.h"
-
 /* ADC
  * 
  * 1. Initialize the ADC for regular channels only
@@ -158,7 +155,8 @@ int adc_init(ADC_t *adc, uint32_t mode, OnSample cb)
 				NVIC_EnableIRQ(irq_number);
 				callback = cb;
 			} 
-			
+		
+            adc->CR1 = (adc->CR1&(~(1<<11)))|((((mode>>1)&1)<<11));
 
 			trig_timer=NULL;
 			trig_pin = NULL;
@@ -271,7 +269,8 @@ int adc_set_trigger_evt(ADC_t *adc, uint32_t evt)
 		// configure ADC trigger source
 		
 		/* A COMPLETER */
-		
+		adc->CR2 = (adc->CR2&(~(((1<<6)-1)<<24)))|evt;  
+
 		switch (evt) {
 		case ADC_TRIG_ON_TIM1_CH1:
 			break;
@@ -289,16 +288,15 @@ int adc_set_trigger_evt(ADC_t *adc, uint32_t evt)
 			// connect timer internal update event to TRGO
 			
 			/* A COMPLETER */
-			
-			trig_timer = _TIM2;
+			_TIM2->CR2 = (_TIM2->CR2&(~(7<<4)))|(2<<4);            
+            trig_timer = _TIM2;
 			break;
 		case ADC_TRIG_ON_TIM3_CH1:
 			break;
 		case ADC_TRIG_ON_TIM3_TRGO:
-			// connect timer internal update event to TRGO
-			
-			/* A COMPLETER */
-			
+			// connect timer internal update event to TRGO	
+			/* A COMPLETER */    
+			_TIM3->CR2 = (_TIM3->CR2&(~(7<<4)))|(2<<4);            
 			trig_timer = _TIM3;
 			break;
 		case ADC_TRIG_ON_TIM4_CH4:

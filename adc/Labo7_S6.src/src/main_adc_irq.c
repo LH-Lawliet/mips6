@@ -8,7 +8,7 @@
 #include "libshield/leds.h"
 #include "libshield/lcd_128x32.h"
 
-#define MAIN3
+#define MAIN4
 
 /******************************************************************************
  * util functions
@@ -281,6 +281,7 @@ void tmr_cb()
 
 static void on_eoc(uint16_t channel, uint16_t val)
 {
+    green_led(state);
 	if (buf_write(&buf, channel, val) == 0) {
 		overrun = 0;
 	} else {
@@ -297,8 +298,8 @@ int main()
 	lcd_reset();
 	
 	// Set sampling period
-	timer_tick_init(_TIM2, 250, tmr_cb);
-//	timer_tick_init(_TIM2, 250, NULL);
+//	timer_tick_init(_TIM2, 250, tmr_cb);
+	timer_tick_init(_TIM2, 250, NULL);
 	
 	buf_init(&buf);
 	int f = adc_init(_ADC1, ADC_MODE_12BITS|ADC_MODE_TRIGGERED, on_eoc);
